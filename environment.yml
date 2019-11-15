@@ -1,0 +1,9 @@
+name: puregym_n_people
+dependencies:
+    - python==3.6.7
+    - pandas==0.24.2
+    - matplotlib==3.1.0
+    - requests==2.22.0
+    - beautifulsoup4==4.8.1
+    - pip==19.3.1
+    - pip:
