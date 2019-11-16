@@ -1,5 +1,6 @@
 import datetime
 import json
+import os
 import time
 
 import pandas as pd
@@ -10,7 +11,7 @@ from configs import CSV_PATH, CREDENTIALS_PATH, LOGIN_URL, LOGIN_API_URL, MEMBER
     TIME_BETWEEN_RETRIES
 
 
-def read_n_people(people_counts, credentials):
+def read_n_people(people_counts, credentials, file_path):
     with requests.Session() as session:
         s = session.get(LOGIN_URL)
         soup = BeautifulSoup(s.text, 'html.parser')
@@ -43,7 +44,7 @@ def read_n_people(people_counts, credentials):
     this_count = pd.Series(heads, index=[now])
     people_counts = pd.concat([people_counts, this_count])
 
-    people_counts.to_csv(CSV_PATH, header=False)
+    people_counts.to_csv(file_path, header=False)
 
     print(people_counts)
     print("")
@@ -57,9 +58,12 @@ def main():
 
     people_counts = pd.Series()
 
+    file_path = os.path.join(CSV_PATH,
+                             datetime.datetime.now().strftime("gym_people_counts_run_starting_%Y_%m_%d__%H_%M.csv"))
+
     while True:
         try:
-            people_counts = read_n_people(people_counts, credentials)
+            people_counts = read_n_people(people_counts, credentials, file_path)
             time.sleep(TIME_BETWEEN_SCRAPES)
         except Exception as e:
             print(e)

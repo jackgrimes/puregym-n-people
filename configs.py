@@ -1,4 +1,6 @@
-CSV_PATH = r"C:\dev\data\puregym_n_people\gym_people_counts.csv"
+CSV_PATH = r"C:\dev\data\puregym_n_people"
+GRAPH_PATH = r"C:\dev\data\puregym_n_people\gym_people_counts_graph.png"
+
 CREDENTIALS_PATH = r"C:\dev\data\puregym_n_people\puregym_credentials.json"
 
 LOGIN_URL = 'https://www.puregym.com/login/'
