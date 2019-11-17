@@ -1,4 +1,5 @@
 import os
+import platform
 
 import pandas as pd
 from matplotlib import dates as mdates
@@ -8,7 +9,8 @@ from matplotlib.dates import DateFormatter
 from configs import PATHS
 from utils import get_paths
 
-pd.plotting.register_matplotlib_converters()
+if platform.system() == "Windows":
+    pd.plotting.register_matplotlib_converters()
 
 CSV_PATH, CREDENTIALS_PATH, GRAPH_PATH = get_paths(PATHS)
 
@@ -20,6 +22,7 @@ def read_and_process_data(CSV_PATH):
         axis=0)
 
     df.index = pd.to_datetime(df.index)
+    df.sort_index(inplace=True)
 
     n_people = df['n_people']
     rolling = n_people.rolling(7).mean(center=True)
