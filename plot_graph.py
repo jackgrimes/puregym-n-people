@@ -42,13 +42,21 @@ def plotter(n_people, rolling, interpolated):
     plt.plot(n_people, label="Number of people in the gym")
     plt.plot(rolling, label="Rolling average")
     plt.plot(interpolated, label="Interpolated")
-    fig.autofmt_xdate(bottom=0.2, rotation=30, ha='right')
-    #ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))
-    #ax.xaxis.set_major_formatter(DateFormatter("%d %m %Y"))
-    #ax.xaxis.set_minor_locator(mdates.HourLocator(interval=1))
-    #ax.xaxis.set_minor_formatter(DateFormatter("%H:%M"))
+
+    ax.tick_params(which='major', width=1.00, length=15)
+    ax.tick_params(which='minor', width=0.75, length=2.5, labelsize=10)
+
+    ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))
+    xfmt = mdates.DateFormatter('%A')
+    ax.xaxis.set_major_formatter(xfmt)
+    ax.xaxis.set_minor_locator(mdates.HourLocator(interval=1))
+    ax.xaxis.set_minor_formatter(DateFormatter("%H"))
+
+    ax.set_ylim(bottom=0)
+
     ax.legend()
     plt.tight_layout()
+
     plt.savefig(GRAPH_PATH)
     plt.show()
 
