@@ -1,12 +1,16 @@
-import pandas as pd
-from matplotlib import pyplot as plt
-from matplotlib import dates as mdates
-from matplotlib.dates import DateFormatter
 import os
+
+import pandas as pd
+from matplotlib import dates as mdates
+from matplotlib import pyplot as plt
+from matplotlib.dates import DateFormatter
+
+from configs import PATHS
+from utils import get_paths
 
 pd.plotting.register_matplotlib_converters()
 
-from configs import CSV_PATH, GRAPH_PATH
+CSV_PATH, CREDENTIALS_PATH, GRAPH_PATH = get_paths(PATHS)
 
 def read_and_process_data(CSV_PATH):
     files = os.listdir(CSV_PATH)
@@ -33,8 +37,8 @@ n_people, rolling, interpolated = read_and_process_data(CSV_PATH)
 def plotter(n_people, rolling, interpolated):
     fig, ax = plt.subplots(figsize=(12, 8))
     plt.plot(n_people, label="Number of people in the gym")
-    #plt.plot(rolling, label="Rolling average")
-    #plt.plot(interpolated, label="Interpolated")
+    plt.plot(rolling, label="Rolling average")
+    plt.plot(interpolated, label="Interpolated")
     fig.autofmt_xdate(bottom=0.2, rotation=30, ha='right')
     ax.xaxis.set_major_locator(mdates.HourLocator(interval=1))
     ax.xaxis.set_major_formatter(DateFormatter("%H:%M"))

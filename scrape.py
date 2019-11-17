@@ -7,8 +7,11 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
-from configs import CSV_PATH, CREDENTIALS_PATH, LOGIN_URL, LOGIN_API_URL, MEMBERS_URL, TIME_BETWEEN_SCRAPES, \
+from configs import PATHS, LOGIN_URL, LOGIN_API_URL, MEMBERS_URL, TIME_BETWEEN_SCRAPES, \
     TIME_BETWEEN_RETRIES
+from utils import get_paths, print_updates
+
+CSV_PATH, CREDENTIALS_PATH, GRAPH_PATH = get_paths(PATHS)
 
 
 def read_n_people(people_counts, credentials, file_path):
@@ -42,12 +45,12 @@ def read_n_people(people_counts, credentials, file_path):
     now = datetime.datetime.now()
 
     this_count = pd.Series(heads, index=[now])
+    print(this_count)
+    print("")
+
     people_counts = pd.concat([people_counts, this_count])
 
     people_counts.to_csv(file_path, header=False)
-
-    print(people_counts)
-    print("")
 
     return people_counts
 
@@ -61,13 +64,19 @@ def main():
     file_path = os.path.join(CSV_PATH,
                              datetime.datetime.now().strftime("gym_people_counts_run_starting_%Y_%m_%d__%H_%M.csv"))
 
+    errors_this_run = 0
+
+    start_time = time.time()
+
     while True:
         try:
             people_counts = read_n_people(people_counts, credentials, file_path)
+            print_updates(start_time, errors_this_run)
             time.sleep(TIME_BETWEEN_SCRAPES)
         except Exception as e:
+            errors_this_run += 1
             print(e)
-            print("")
+            print_updates(start_time, errors_this_run)
             time.sleep(TIME_BETWEEN_RETRIES)
 
 
