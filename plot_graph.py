@@ -63,7 +63,7 @@ def plotter(n_people, rolling, interpolated):
     plt.show()
 
 
-plotter(n_people, rolling, interpolated)
+#plotter(n_people, rolling, interpolated)
 
 
 def plotter_by_day(n_people):
@@ -88,6 +88,7 @@ def plotter_by_day(n_people):
     ax.set_xticklabels(labels)
     plt.grid(b=True, which='major', color='grey', linestyle='-')
     ax.set_ylim(bottom=0)
+    ax.set_xlim([5, 24])
     ax.legend()
     plt.tight_layout()
     plt.savefig(BY_DAY_GRAPH_PATH)
