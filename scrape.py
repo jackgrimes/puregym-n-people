@@ -11,7 +11,7 @@ from configs import PATHS, LOGIN_URL, LOGIN_API_URL, MEMBERS_URL, TIME_BETWEEN_S
     TIME_BETWEEN_RETRIES
 from utils import get_paths, print_updates
 
-CSV_PATH, CREDENTIALS_PATH, GRAPH_PATH = get_paths(PATHS)
+CSV_PATH, CREDENTIALS_PATH, GRAPH_PATH, BY_DAY_GRAPH_PATH = get_paths(PATHS)
 
 
 def read_n_people(people_counts, credentials, file_path):
