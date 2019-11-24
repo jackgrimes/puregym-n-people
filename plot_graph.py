@@ -63,25 +63,35 @@ def plotter(n_people, rolling, interpolated):
     plt.show()
 
 
-#plotter(n_people, rolling, interpolated)
+# plotter(n_people, rolling, interpolated)
 
 
 def plotter_by_day(n_people):
     n_people_df = n_people.reset_index(drop=False)
-    n_people_df['day_of_week'] = n_people_df.time.dt.strftime("%A")
     n_people_df['date'] = n_people_df.time.dt.strftime("%Y_%m_%d")
 
     fig, ax = plt.subplots(figsize=(12, 8))
 
-    for day in n_people_df.day_of_week.unique():
-        n_people_df_this_day = n_people_df[n_people_df['day_of_week'] == day]
-        for date in n_people_df_this_day.date.unique():
-            n_people_df_this_day_this_date = n_people_df_this_day[n_people_df_this_day['date'] == date]
-            n_people_df_this_day_this_date = n_people_df_this_day_this_date[['n_people', 'time']]
-            n_people_df_this_day_this_date['time_decimal'] = n_people_df_this_day_this_date.time.dt.hour + (
-                    n_people_df_this_day_this_date.time.dt.minute / 60) + n_people_df_this_day_this_date.time.dt.second / 3600
-            plt.plot(n_people_df_this_day_this_date.time_decimal, n_people_df_this_day_this_date.n_people, label=day)
+    # Plot each day's data
+    for date in n_people_df.date.unique():
+        day = pd.to_datetime(date, format="%Y_%m_%d").strftime(format='%A')
+        n_people_df_this_date = n_people_df[n_people_df['date'] == date]
+        n_people_df_this_date = n_people_df_this_date[['n_people', 'time']]
+        n_people_df_this_date['time_decimal'] = n_people_df_this_date['time'].dt.hour + (
+                n_people_df_this_date['time'].dt.minute / 60) + n_people_df_this_date['time'].dt.second / 3600
+        plt.plot(n_people_df_this_date.time_decimal, n_people_df_this_date.n_people, label=day)
 
+    # Make sure different lines for the same day of week share a colour and label
+    names = []
+    for i, p in enumerate(ax.get_lines()):
+        # this is the loop to change Labels and colors
+        if p.get_label() in names[:i]:  # check for Name already exists
+            idx = names.index(p.get_label())  # find ist index
+            p.set_c(ax.get_lines()[idx].get_c())  # set color
+            p.set_label('_' + p.get_label())
+        names.append(p.get_label())
+
+    # Axes configuration
     plt.xticks(np.arange(0, 24, 1))
     labels = ax.get_xticks().tolist()
     labels = [(str(label) + ":00") for label in labels]
