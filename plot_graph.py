@@ -79,7 +79,7 @@ def plotter_by_day(n_people):
         n_people_df_this_date = n_people_df_this_date[['n_people', 'time']]
         n_people_df_this_date['time_decimal'] = n_people_df_this_date['time'].dt.hour + (
                 n_people_df_this_date['time'].dt.minute / 60) + n_people_df_this_date['time'].dt.second / 3600
-        plt.plot(n_people_df_this_date.time_decimal, n_people_df_this_date.n_people, label=day)
+        plt.plot(n_people_df_this_date['time_decimal'], n_people_df_this_date['n_people'], label=day)
 
     # Make sure different lines for the same day of week share a colour and label
     names = []
