@@ -7,8 +7,14 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
-from configs import PATHS, LOGIN_URL, LOGIN_API_URL, MEMBERS_URL, TIME_BETWEEN_SCRAPES, \
-    TIME_BETWEEN_RETRIES
+from configs import (
+    PATHS,
+    LOGIN_URL,
+    LOGIN_API_URL,
+    MEMBERS_URL,
+    TIME_BETWEEN_SCRAPES,
+    TIME_BETWEEN_RETRIES,
+)
 from utils import get_paths, print_updates
 
 CSV_PATH, CREDENTIALS_PATH, GRAPH_PATH, BY_DAY_GRAPH_PATH = get_paths(PATHS)
@@ -17,26 +23,28 @@ CSV_PATH, CREDENTIALS_PATH, GRAPH_PATH, BY_DAY_GRAPH_PATH = get_paths(PATHS)
 def read_n_people(people_counts, credentials, file_path):
     with requests.Session() as session:
         s = session.get(LOGIN_URL)
-        soup = BeautifulSoup(s.text, 'html.parser')
-        tag = soup.find("input", {'name': '__RequestVerificationToken'})
-        token = tag['value']
+        soup = BeautifulSoup(s.text, "html.parser")
+        tag = soup.find("input", {"name": "__RequestVerificationToken"})
+        token = tag["value"]
 
-        payload = {'email': credentials['email'],  # replace with email
-                   'pin': credentials['pin']}  # replace with pin
+        payload = {
+            "email": credentials["email"],  # replace with email
+            "pin": credentials["pin"],
+        }  # replace with pin
 
-        headers = {'__RequestVerificationToken': token}
+        headers = {"__RequestVerificationToken": token}
 
         session.post(LOGIN_API_URL, headers=headers, data=payload)
         response = session.get(MEMBERS_URL)
 
-    soup = BeautifulSoup(response.text, 'html.parser')
+    soup = BeautifulSoup(response.text, "html.parser")
 
     # Find the member count on the page
-    count = soup.find('span', 'heading heading--level3 secondary-color margin-none')
+    count = soup.find("span", "heading heading--level3 secondary-color margin-none")
 
     members = count.text.split()
 
-    if members[0] == 'Fewer':
+    if members[0] == "Fewer":
         # Fewer than 20 people
         heads = 20
     else:
@@ -61,8 +69,12 @@ def main():
 
     people_counts = pd.Series()
 
-    file_path = os.path.join(CSV_PATH,
-                             datetime.datetime.now().strftime("gym_people_counts_run_starting_%Y_%m_%d__%H_%M.csv"))
+    file_path = os.path.join(
+        CSV_PATH,
+        datetime.datetime.now().strftime(
+            "gym_people_counts_run_starting_%Y_%m_%d__%H_%M.csv"
+        ),
+    )
 
     errors_this_run = 0
 
@@ -80,5 +92,5 @@ def main():
             time.sleep(TIME_BETWEEN_RETRIES)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -1,16 +1,21 @@
-PATHS = {'Windows': {'CSV_PATH': r"C:\dev\data\puregym_n_people",
-                     'GRAPH_PATH': r"C:\dev\data\puregym_n_people\gym_people_counts_graph.png",
-                     'CREDENTIALS_PATH': r"C:\dev\data\puregym_n_people\puregym_credentials.json",
-                     'BY_DAY_GRAPH_PATH': r"C:\dev\data\puregym_n_people\gym_people_counts_graph_by_day.png"},
-         'Linux': {'CSV_PATH': r"/home/pi/Desktop/puregym",
-                   'GRAPH_PATH': r"/home/pi/Desktop/puregym/gym_people_counts_graph.png",
-                   'CREDENTIALS_PATH': r"/home/pi/Desktop/puregym/puregym_credentials.json",
-                   'BY_DAY_GRAPH_PATH': r"/home/pi/Desktop/puregym/gym_people_counts_graph_by_day.png"}
-         }
+PATHS = {
+    "Windows": {
+        "CSV_PATH": r"C:\dev\data\puregym_n_people",
+        "GRAPH_PATH": r"C:\dev\data\puregym_n_people\gym_people_counts_graph.png",
+        "CREDENTIALS_PATH": r"C:\dev\data\puregym_n_people\puregym_credentials.json",
+        "BY_DAY_GRAPH_PATH": r"C:\dev\data\puregym_n_people\gym_people_counts_graph_by_day.png",
+    },
+    "Linux": {
+        "CSV_PATH": r"/home/pi/Desktop/puregym",
+        "GRAPH_PATH": r"/home/pi/Desktop/puregym/gym_people_counts_graph.png",
+        "CREDENTIALS_PATH": r"/home/pi/Desktop/puregym/puregym_credentials.json",
+        "BY_DAY_GRAPH_PATH": r"/home/pi/Desktop/puregym/gym_people_counts_graph_by_day.png",
+    },
+}
 
-LOGIN_URL = 'https://www.puregym.com/login/'
-LOGIN_API_URL = 'https://www.puregym.com/api/members/login'
-MEMBERS_URL = 'https://www.puregym.com/members/'
+LOGIN_URL = "https://www.puregym.com/login/"
+LOGIN_API_URL = "https://www.puregym.com/api/members/login"
+MEMBERS_URL = "https://www.puregym.com/members/"
 
 # In seconds
 TIME_BETWEEN_SCRAPES = 270
