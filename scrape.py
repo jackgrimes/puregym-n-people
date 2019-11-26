@@ -40,7 +40,7 @@ def read_n_people(people_counts, credentials, file_path):
     soup = BeautifulSoup(response.text, "html.parser")
 
     # Find the member count on the page
-    count = soup.find("span", "heading heading--level3 secondary-color margin-none")
+    count = soup.find("span", "heading heading--level3 secondary-color margin-bottom")
 
     members = count.text.split()
 
