@@ -93,6 +93,9 @@ def plotter_by_day(n_people):
         plt.plot(
             n_people_df_this_date["time_decimal"],
             n_people_df_this_date["n_people"],
+            #marker='o',
+            markersize=2,
+            #ls='',
             label=day,
         )
 
