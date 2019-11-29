@@ -12,7 +12,14 @@ def get_paths(PATHS):
     CREDENTIALS_PATH = PATHS["CREDENTIALS_PATH"]
     GRAPH_PATH = PATHS["GRAPH_PATH"]
     BY_DAY_GRAPH_PATH = PATHS["BY_DAY_GRAPH_PATH"]
-    return CSV_PATH, CREDENTIALS_PATH, GRAPH_PATH, BY_DAY_GRAPH_PATH
+    BY_DAY_AVERAGE_GRAPH_PATH = PATHS["BY_DAY_AVERAGE_GRAPH_PATH"]
+    return (
+        CSV_PATH,
+        CREDENTIALS_PATH,
+        GRAPH_PATH,
+        BY_DAY_GRAPH_PATH,
+        BY_DAY_AVERAGE_GRAPH_PATH,
+    )
 
 
 def print_updates(start_time, errors_this_run):

@@ -17,7 +17,13 @@ from configs import (
 )
 from utils import get_paths, print_updates
 
-CSV_PATH, CREDENTIALS_PATH, GRAPH_PATH, BY_DAY_GRAPH_PATH = get_paths(PATHS)
+(
+    CSV_PATH,
+    CREDENTIALS_PATH,
+    GRAPH_PATH,
+    BY_DAY_GRAPH_PATH,
+    BY_DAY_AVERAGE_GRAPH_PATH,
+) = get_paths(PATHS)
 
 
 def read_n_people(people_counts, credentials, file_path):
