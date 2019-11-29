@@ -198,7 +198,7 @@ def plotter_by_day_average(n_people):
         from scipy.interpolate import make_interp_spline, BSpline
 
         xnew = np.linspace(
-            interpolated["time_decimal"].min(), interpolated["time_decimal"].max(), 300
+            interpolated["time_decimal"].min(), interpolated["time_decimal"].max(), 3000
         )
 
         spl = make_interp_spline(
