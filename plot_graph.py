@@ -7,7 +7,7 @@ from matplotlib import dates as mdates
 from matplotlib import pyplot as plt
 from matplotlib.dates import DateFormatter
 
-from configs import PATHS
+from configs import PATHS, DAYS_OF_WEEK
 from utils import get_paths
 
 if platform.system() == "Windows":
@@ -145,7 +145,7 @@ def plotter_by_day_average(n_people):
 
     data_by_day_of_week = {}
 
-    for day in n_people_df["day"].unique():
+    for day in DAYS_OF_WEEK:
         this_day_of_week_data = n_people_df[n_people_df["day"] == day]
         this_day_of_week_data.set_index("time_decimal", drop=True)
         data_by_day_of_week[day] = this_day_of_week_data

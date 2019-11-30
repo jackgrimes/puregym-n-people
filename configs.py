@@ -22,3 +22,14 @@ MEMBERS_URL = "https://www.puregym.com/members/"
 # In seconds
 TIME_BETWEEN_SCRAPES = 270
 TIME_BETWEEN_RETRIES = 1
+
+
+DAYS_OF_WEEK = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+]
