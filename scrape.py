@@ -17,13 +17,7 @@ from configs import (
 )
 from utils import get_paths, print_updates
 
-(
-    CSV_PATH,
-    CREDENTIALS_PATH,
-    GRAPH_PATH,
-    BY_DAY_GRAPH_PATH,
-    BY_DAY_AVERAGE_GRAPH_PATH,
-) = get_paths(PATHS)
+DATA_PATH = get_paths(PATHS)
 
 
 def read_n_people(people_counts, credentials, file_path):
@@ -59,31 +53,31 @@ def read_n_people(people_counts, credentials, file_path):
     now = datetime.datetime.now()
 
     this_count = pd.Series(heads, index=[now])
-    print(this_count)
-    print("")
+    print("Count is: " + str(list(this_count)[0]))
 
     people_counts = pd.concat([people_counts, this_count])
-
     people_counts.to_csv(file_path, header=False)
 
     return people_counts
 
 
 def main():
-    with open(CREDENTIALS_PATH, "r") as read_file:
+
+    credentials_path = os.path.join(DATA_PATH, "puregym_credentials.json")
+
+    with open(credentials_path, "r") as read_file:
         credentials = json.load(read_file)
 
     people_counts = pd.Series()
 
     file_path = os.path.join(
-        CSV_PATH,
+        os.path.join(DATA_PATH, "data"),
         datetime.datetime.now().strftime(
             "gym_people_counts_run_starting_%Y_%m_%d__%H_%M.csv"
         ),
     )
 
     errors_this_run = 0
-
     start_time = time.time()
 
     while True:
