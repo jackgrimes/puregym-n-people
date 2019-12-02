@@ -4,13 +4,13 @@ import platform
 import pandas as pd
 
 from configs import PATHS
-from utils import (
-    get_paths,
+from utils.plot_utils import (
     read_and_process_data,
     plotter,
     plotter_by_day,
     plotter_by_day_average,
 )
+from utils.scrape_utils import get_paths
 
 if platform.system() == "Windows":
     pd.plotting.register_matplotlib_converters()

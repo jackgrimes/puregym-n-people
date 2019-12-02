@@ -15,7 +15,7 @@ from configs import (
     TIME_BETWEEN_SCRAPES,
     TIME_BETWEEN_RETRIES,
 )
-from utils import get_paths, print_updates
+from utils.scrape_utils import get_paths, print_updates
 
 DATA_PATH = get_paths(PATHS)
 
