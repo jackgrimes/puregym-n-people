@@ -2,6 +2,16 @@ import datetime
 import platform
 import time
 
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+
+from configs import (
+    LOGIN_URL,
+    LOGIN_API_URL,
+    MEMBERS_URL,
+)
+
 
 def get_paths(paths):
     if platform.system() == "Windows":
@@ -20,3 +30,43 @@ def print_updates(start_time, errors_this_run):
         + str(datetime.timedelta(seconds=(time.time() - start_time)))
         + "\n"
     )
+
+def read_n_people(people_counts, credentials, file_path):
+    with requests.Session() as session:
+        s = session.get(LOGIN_URL)
+        soup = BeautifulSoup(s.text, "html.parser")
+        tag = soup.find("input", {"name": "__RequestVerificationToken"})
+        token = tag["value"]
+
+        payload = {
+            "email": credentials["email"],  # replace with email
+            "pin": credentials["pin"],
+        }  # replace with pin
+
+        headers = {"__RequestVerificationToken": token}
+
+        session.post(LOGIN_API_URL, headers=headers, data=payload)
+        response = session.get(MEMBERS_URL)
+
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    # Find the member count on the page
+    count = soup.find("span", "heading heading--level3 secondary-color margin-bottom")
+
+    members = count.text.split()
+
+    if members[0] == "Fewer":
+        # Fewer than 20 people
+        heads = 20
+    else:
+        heads = int(members[0])
+
+    now = datetime.datetime.now()
+
+    this_count = pd.Series(heads, index=[now])
+    print("Count is: " + str(list(this_count)[0]))
+
+    people_counts = pd.concat([people_counts, this_count])
+    people_counts.to_csv(file_path, header=False)
+
+    return people_counts

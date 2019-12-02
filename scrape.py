@@ -4,62 +4,15 @@ import os
 import time
 
 import pandas as pd
-import requests
-from bs4 import BeautifulSoup
 
 from configs import (
     PATHS,
-    LOGIN_URL,
-    LOGIN_API_URL,
-    MEMBERS_URL,
     TIME_BETWEEN_SCRAPES,
     TIME_BETWEEN_RETRIES,
 )
-from utils.scrape_utils import get_paths, print_updates
+from utils.scrape_utils import get_paths, print_updates, read_n_people
 
 DATA_PATH = get_paths(PATHS)
-
-
-def read_n_people(people_counts, credentials, file_path):
-    with requests.Session() as session:
-        s = session.get(LOGIN_URL)
-        soup = BeautifulSoup(s.text, "html.parser")
-        tag = soup.find("input", {"name": "__RequestVerificationToken"})
-        token = tag["value"]
-
-        payload = {
-            "email": credentials["email"],  # replace with email
-            "pin": credentials["pin"],
-        }  # replace with pin
-
-        headers = {"__RequestVerificationToken": token}
-
-        session.post(LOGIN_API_URL, headers=headers, data=payload)
-        response = session.get(MEMBERS_URL)
-
-    soup = BeautifulSoup(response.text, "html.parser")
-
-    # Find the member count on the page
-    count = soup.find("span", "heading heading--level3 secondary-color margin-bottom")
-
-    members = count.text.split()
-
-    if members[0] == "Fewer":
-        # Fewer than 20 people
-        heads = 20
-    else:
-        heads = int(members[0])
-
-    now = datetime.datetime.now()
-
-    this_count = pd.Series(heads, index=[now])
-    print("Count is: " + str(list(this_count)[0]))
-
-    people_counts = pd.concat([people_counts, this_count])
-    people_counts.to_csv(file_path, header=False)
-
-    return people_counts
-
 
 def main():
 
