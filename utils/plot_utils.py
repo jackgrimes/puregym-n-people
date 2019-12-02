@@ -57,7 +57,7 @@ def plotter_by_day(n_people, time_str, data_path):
     fig, ax = plt.subplots(figsize=(12, 8))
 
     # Plot each day's data
-    for date in n_people_df.date.unique():
+    for date in list(n_people_df.date.unique())[2:] + list(n_people_df.date.unique())[:1]:
         day = pd.to_datetime(date, format="%Y_%m_%d").strftime(format="%A")
         n_people_df_this_date = n_people_df[n_people_df["date"] == date]
         n_people_df_this_date = n_people_df_this_date[
