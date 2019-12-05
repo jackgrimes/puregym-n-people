@@ -1,6 +1,6 @@
 PATHS = {
     "Windows": {
-        "DATA_PATH": r"C:\dev\data\puregym_n_people",
+        "DATA_PATH": r"C:\dev\data\puregym_scraper",
     },
     "Linux": {
         "DATA_PATH": r"/home/pi/Desktop/puregym/",

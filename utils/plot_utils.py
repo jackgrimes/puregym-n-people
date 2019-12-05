@@ -31,7 +31,7 @@ def read_and_process_data(data_path):
 
 
 def plotter(n_people, time_str, DATA_PATH):
-    fig, ax = plt.subplots(figsize=(12, 8))
+    fig, ax = plt.subplots(figsize=(24, 8))
     plt.plot(n_people, label="Number of people in the gym")
     ax.set_ylim(bottom=0)
     ax.set_xlabel("Date")
@@ -42,7 +42,6 @@ def plotter(n_people, time_str, DATA_PATH):
             os.path.join(DATA_PATH, "graphs"), time_str + "_all_time_graph.png"
         )
     )
-    plt.show()
 
 
 def plotter_by_day(n_people, time_str, data_path):
@@ -96,7 +95,6 @@ def plotter_by_day(n_people, time_str, data_path):
     plt.savefig(
         os.path.join(os.path.join(data_path, "graphs"), time_str + "_by_day_graph.png")
     )
-    plt.show()
 
 
 def get_decimal_time_and_day_of_week(n_people):
@@ -268,7 +266,6 @@ def plotter_by_day_average(n_people, time_str, data_path, plotting):
     plt.savefig(
         figure_path
     )
-    plt.show()
 
 
 def plot_time_per_visit(durations, DATA_PATH, time_str):
