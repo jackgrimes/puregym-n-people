@@ -14,6 +14,7 @@ from utils.scrape_utils import get_paths, print_updates, read_n_people
 
 DATA_PATH = get_paths(PATHS)
 
+
 def main():
 
     credentials_path = os.path.join(DATA_PATH, "puregym_credentials.json")
@@ -24,7 +25,7 @@ def main():
     people_counts = pd.Series()
 
     file_path = os.path.join(
-        os.path.join(DATA_PATH, "data"),
+        os.path.join(DATA_PATH, "data_n_people"),
         datetime.datetime.now().strftime(
             "gym_people_counts_run_starting_%Y_%m_%d__%H_%M.csv"
         ),

@@ -9,9 +9,9 @@ from configs import DAYS_OF_WEEK
 
 
 def read_and_process_data(data_path):
-    files = os.listdir(os.path.join(data_path, "data"))
+    files = os.listdir(os.path.join(data_path, "data_n_people"))
     full_file_paths = [
-        os.path.join(os.path.join(data_path, "data"), file)
+        os.path.join(os.path.join(data_path, "data_n_people"), file)
         for file in files
         if (".csv" in file)
     ]
@@ -34,14 +34,14 @@ def plotter(n_people, time_str, DATA_PATH):
     fig, ax = plt.subplots(figsize=(12, 8))
     plt.plot(n_people, label="Number of people in the gym")
     ax.set_ylim(bottom=0)
-
+    ax.set_xlabel("Date")
+    ax.set_ylabel("Number of people in gym")
+    plt.tight_layout()
     plt.savefig(
         os.path.join(
             os.path.join(DATA_PATH, "graphs"), time_str + "_all_time_graph.png"
         )
     )
-    ax.set_xlabel("Date")
-    ax.set_ylabel("Number of people in gym")
     plt.show()
 
 
@@ -57,7 +57,9 @@ def plotter_by_day(n_people, time_str, data_path):
     fig, ax = plt.subplots(figsize=(12, 8))
 
     # Plot each day's data
-    for date in list(n_people_df.date.unique())[2:] + list(n_people_df.date.unique())[:1]:
+    for date in (
+        list(n_people_df.date.unique())[2:] + list(n_people_df.date.unique())[:1]
+    ):
         day = pd.to_datetime(date, format="%Y_%m_%d").strftime(format="%A")
         n_people_df_this_date = n_people_df[n_people_df["date"] == date]
         n_people_df_this_date = n_people_df_this_date[
@@ -252,6 +254,48 @@ def plotter_by_day_average(n_people, time_str, data_path):
     plt.savefig(
         os.path.join(
             os.path.join(data_path, "graphs"), time_str + "_by_day_average_graph.png"
+        )
+    )
+    plt.show()
+
+
+def plot_time_per_visit(durations, DATA_PATH, time_str):
+    fig, ax = plt.subplots(figsize=(12, 8))
+    plt.plot(
+        durations["date"],
+        durations["duration"],
+        marker="o",
+        markersize=2,
+        ls="",
+        alpha=1,
+    )
+    ax.set_xlabel("Date")
+    ax.set_ylabel("Time spent in gym (minutes)")
+    plt.tight_layout()
+    plt.savefig(
+        os.path.join(
+            os.path.join(DATA_PATH, "graphs"), time_str + "_duration_per_visit.png"
+        )
+    )
+    plt.show()
+
+def plot_time_per_week(durations, DATA_PATH, time_str):
+    durations_grouped = (
+        durations.groupby([pd.Grouper(key="date", freq="W-SUN")])
+            .sum()
+            .reset_index()
+            .sort_values("date")
+    )
+    fig, ax = plt.subplots(figsize=(12, 8))
+    ax.set_xlabel("Date")
+    ax.set_ylabel("Time spent in gym over week (minutes)")
+    plt.plot(
+        durations_grouped["date"], durations_grouped["duration"],
+    )
+    plt.tight_layout()
+    plt.savefig(
+        os.path.join(
+            os.path.join(DATA_PATH, "graphs"), time_str + "_duration_per_week.png"
         )
     )
     plt.show()

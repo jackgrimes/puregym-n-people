@@ -1,4 +1,5 @@
 import datetime
+import json
 import platform
 import time
 
@@ -10,6 +11,7 @@ from configs import (
     LOGIN_URL,
     LOGIN_API_URL,
     MEMBERS_URL,
+    ACTIVITY_URL,
 )
 
 
@@ -30,6 +32,7 @@ def print_updates(start_time, errors_this_run):
         + str(datetime.timedelta(seconds=(time.time() - start_time)))
         + "\n"
     )
+
 
 def read_n_people(people_counts, credentials, file_path):
     with requests.Session() as session:
@@ -70,3 +73,40 @@ def read_n_people(people_counts, credentials, file_path):
     people_counts.to_csv(file_path, header=False)
 
     return people_counts
+
+
+def read_my_durations(credentials):
+    with requests.Session() as session:
+        s = session.get(LOGIN_URL)
+        soup = BeautifulSoup(s.text, "html.parser")
+        tag = soup.find("input", {"name": "__RequestVerificationToken"})
+        token = tag["value"]
+
+        payload = {
+            "email": credentials["email"],  # replace with email
+            "pin": credentials["pin"],
+        }  # replace with pin
+
+        headers = {"__RequestVerificationToken": token}
+
+        session.post(LOGIN_API_URL, headers=headers, data=payload)
+        response = session.get(ACTIVITY_URL)
+
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    # Find the durations on the page
+    durations = (
+        str(soup)
+        .split(
+            '<a class="tabs-mobile__link" href="/members/member-benefits/">Benefits</a>'
+        )[1]
+        .split("var jsonData = ")[1]
+        .split(";")[0]
+    )
+
+    durations = json.loads(durations)
+    durations = pd.DataFrame(durations)
+    durations.rename(columns={'count': 'duration'}, inplace=True)
+
+    durations['date'] = pd.to_datetime(durations['date'], format="%Y-%m-%d")
+    return durations

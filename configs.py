@@ -10,6 +10,7 @@ PATHS = {
 LOGIN_URL = "https://www.puregym.com/login/"
 LOGIN_API_URL = "https://www.puregym.com/api/members/login"
 MEMBERS_URL = "https://www.puregym.com/members/"
+ACTIVITY_URL = "https://www.puregym.com/members/activity/?view=year"
 
 # In seconds
 TIME_BETWEEN_SCRAPES = 270
