@@ -145,7 +145,7 @@ def put_all_data_for_this_day_of_week_on_a_single_day(day, data_by_day_of_week):
     return this_day_of_week_data_on_single_date
 
 
-def get_and_plot_data_by_day_of_week(n_people_df):
+def get_and_plot_data_by_day_of_week(n_people_df, plotting):
     data_by_day_of_week = {}
 
     for day in DAYS_OF_WEEK:
@@ -153,10 +153,15 @@ def get_and_plot_data_by_day_of_week(n_people_df):
         this_day_of_week_data.set_index("time_decimal", drop=True)
         data_by_day_of_week[day] = this_day_of_week_data
 
+        if plotting:
+            marker = "o"
+        else:
+            marker = ""
+
         plt.plot(
             this_day_of_week_data["time_decimal"],
             this_day_of_week_data["n_people"],
-            marker="o",
+            marker=marker,
             markersize=2,
             ls="",
             label=day,
@@ -234,10 +239,10 @@ def tidy_axes(ax):
     ax.set_ylabel("Number of people in gym")
 
 
-def plotter_by_day_average(n_people, time_str, data_path):
+def plotter_by_day_average(n_people, time_str, data_path, plotting):
     n_people_df, fig, ax = get_decimal_time_and_day_of_week(n_people)
 
-    data_by_day_of_week = get_and_plot_data_by_day_of_week(n_people_df)
+    data_by_day_of_week = get_and_plot_data_by_day_of_week(n_people_df, plotting)
 
     for day in data_by_day_of_week.keys():
         this_day_of_week_data_on_single_date = put_all_data_for_this_day_of_week_on_a_single_day(
@@ -250,11 +255,18 @@ def plotter_by_day_average(n_people, time_str, data_path):
     tidy_legend(ax)
     tidy_axes(ax)
 
-    plt.tight_layout()
-    plt.savefig(
-        os.path.join(
+    if plotting:
+        figure_path = os.path.join(
+            os.path.join(data_path, "graphs"), time_str + "_by_day_average_graph_with_points.png"
+        )
+    else:
+        figure_path = os.path.join(
             os.path.join(data_path, "graphs"), time_str + "_by_day_average_graph.png"
         )
+
+    plt.tight_layout()
+    plt.savefig(
+        figure_path
     )
     plt.show()
 
@@ -279,12 +291,13 @@ def plot_time_per_visit(durations, DATA_PATH, time_str):
     )
     plt.show()
 
+
 def plot_time_per_week(durations, DATA_PATH, time_str):
     durations_grouped = (
         durations.groupby([pd.Grouper(key="date", freq="W-SUN")])
-            .sum()
-            .reset_index()
-            .sort_values("date")
+        .sum()
+        .reset_index()
+        .sort_values("date")
     )
     fig, ax = plt.subplots(figsize=(12, 8))
     ax.set_xlabel("Date")

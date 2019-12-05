@@ -23,4 +23,5 @@ n_people = read_and_process_data(data_path)
 if __name__ == "__main__":
     plotter(n_people, time_str, data_path)
     plotter_by_day(n_people, time_str, data_path)
-    plotter_by_day_average(n_people, time_str, data_path)
+    plotter_by_day_average(n_people, time_str, data_path, True)
+    plotter_by_day_average(n_people, time_str, data_path, False)
