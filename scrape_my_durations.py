@@ -18,10 +18,10 @@ def main():
 
     file_path = os.path.join(os.path.join(DATA_PATH, "data_durations"), "durations.csv")
 
-    try:
+    if os.path.isfile(file_path):
         durations = pd.read_csv(file_path)
         durations["date"] = pd.to_datetime(durations["date"], format="%Y-%m-%d")
-    except:
+    else:
         durations = pd.DataFrame()
 
     new_durations = read_my_durations(credentials)

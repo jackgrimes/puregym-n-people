@@ -255,7 +255,8 @@ def plotter_by_day_average(n_people, time_str, data_path, plotting):
 
     if plotting:
         figure_path = os.path.join(
-            os.path.join(data_path, "graphs"), time_str + "_by_day_average_graph_with_points.png"
+            os.path.join(data_path, "graphs"),
+            time_str + "_by_day_average_graph_with_points.png",
         )
     else:
         figure_path = os.path.join(
@@ -263,9 +264,7 @@ def plotter_by_day_average(n_people, time_str, data_path, plotting):
         )
 
     plt.tight_layout()
-    plt.savefig(
-        figure_path
-    )
+    plt.savefig(figure_path)
 
 
 def plot_time_per_visit(durations, DATA_PATH, time_str):
@@ -286,7 +285,6 @@ def plot_time_per_visit(durations, DATA_PATH, time_str):
             os.path.join(DATA_PATH, "graphs"), time_str + "_duration_per_visit.png"
         )
     )
-    plt.show()
 
 
 def plot_time_per_week(durations, DATA_PATH, time_str):
@@ -308,4 +306,16 @@ def plot_time_per_week(durations, DATA_PATH, time_str):
             os.path.join(DATA_PATH, "graphs"), time_str + "_duration_per_week.png"
         )
     )
-    plt.show()
+
+
+def plot_durations_histogram(durations, DATA_PATH, time_str):
+    fig, ax = plt.subplots(figsize=(12, 8))
+    plt.hist(durations["duration"], bins=20)
+    ax.set_xlabel("Time spent in gym over week (minutes)")
+    ax.set_ylabel("Count")
+    plt.tight_layout()
+    plt.savefig(
+        os.path.join(
+            os.path.join(DATA_PATH, "graphs"), time_str + "_histogram_of_durations.png"
+        )
+    )
