@@ -106,7 +106,24 @@ def read_my_durations(credentials):
 
     durations = json.loads(durations)
     durations = pd.DataFrame(durations)
-    durations.rename(columns={'count': 'duration'}, inplace=True)
+    durations.rename(columns={"count": "duration"}, inplace=True)
 
-    durations['date'] = pd.to_datetime(durations['date'], format="%Y-%m-%d")
+    durations["date"] = pd.to_datetime(durations["date"], format="%Y-%m-%d")
     return durations
+
+
+def process_new_durations(scraped_durations, durations):
+    new_durations = scraped_durations[scraped_durations["date"] >= max(durations["date"])].copy()
+
+    new_durations["concat"] = new_durations.loc[:, "date"].dt.strftime(
+        "%Y_%m_%d__"
+    ) + (new_durations.loc[:, "duration"].astype(str))
+
+    durations["concat"] = durations.loc[:, "date"].dt.strftime("%Y_%m_%d__") + (
+        durations.loc[:, "duration"].astype(str)
+    )
+
+    new_durations = new_durations[~new_durations["concat"].isin(durations["concat"])]
+    new_durations = new_durations[["date", "duration"]]
+    new_durations = new_durations.sort_values("date", ascending=True)
+    return new_durations
