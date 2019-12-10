@@ -1,3 +1,4 @@
+import json
 import os
 
 import numpy as np
@@ -24,9 +25,20 @@ def read_and_process_data(data_path):
         axis=0,
     )
 
+    with open(os.path.join(data_path, "dates_to_exclude.json"), "r") as f:
+        dates_to_exclude = json.load(f)
+
+    dates_to_exclude = dates_to_exclude["dates_to_exclude"]
+
+    df.reset_index(drop=False, inplace=True)
+    df["date_str"] = pd.to_datetime(df["time"]).dt.strftime("%Y_%m_%d")
+    df = df[~df["date_str"].isin(dates_to_exclude)]
+
+    df.set_index("time", inplace=True, drop=True)
     df.index = pd.to_datetime(df.index)
     df.sort_index(inplace=True)
     n_people = df["n_people"]
+
     return n_people
 
 
