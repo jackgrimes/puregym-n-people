@@ -193,7 +193,7 @@ def get_and_plot_data_by_day_of_week(n_people_df, plotting):
             markersize=2,
             ls="",
             label=day,
-            alpha=0.3,
+            alpha=0.2,
         )
 
     return data_by_day_of_week
