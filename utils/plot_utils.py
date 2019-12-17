@@ -158,9 +158,27 @@ def put_all_data_for_this_day_of_week_on_a_single_day(day, data_by_day_of_week):
 def get_and_plot_data_by_day_of_week(n_people_df, plotting):
     data_by_day_of_week = {}
 
-    for day in DAYS_OF_WEEK:
+    for index, day in enumerate(DAYS_OF_WEEK):
         this_day_of_week_data = n_people_df[n_people_df["day"] == day]
         this_day_of_week_data.set_index("time_decimal", drop=True)
+
+        if day != "Sunday":
+            next_day = DAYS_OF_WEEK[index + 1]
+        else:
+            next_day = "Monday"
+
+        # Add in a couple of hours from next day, to make line run smoothly to end of graph
+        next_day_of_week_data = n_people_df[n_people_df["day"] == next_day]
+        next_day_of_week_data.set_index("time_decimal", drop=True)
+        next_day_of_week_data = next_day_of_week_data[
+            next_day_of_week_data["time_decimal"] < 2
+        ]
+        next_day_of_week_data["time_decimal"] += 24
+
+        this_day_of_week_data = pd.concat(
+            [this_day_of_week_data, next_day_of_week_data], axis=0
+        )
+
         data_by_day_of_week[day] = this_day_of_week_data
 
         if plotting:
@@ -182,11 +200,21 @@ def get_and_plot_data_by_day_of_week(n_people_df, plotting):
 
 
 def linear_interpolation(this_day_of_week_data_on_single_date):
-    oidx = this_day_of_week_data_on_single_date.index
-    nidx = pd.date_range(oidx.min(), oidx.max(), freq="1000s")
+
+    # Get rolling mean
+    rolling_df = this_day_of_week_data_on_single_date[["n_people", "time_decimal"]]
+    rolling_df = rolling_df.rolling(40, center=True).mean().dropna()
+
+    # Add in a couple of hours from next day, to make line run smoothly to end of graph
+    oidx = rolling_df.index
+    nidx = pd.date_range(
+        pd.Timestamp("2000-01-01 00:00:00-0000"),
+        pd.Timestamp("2000-01-02 02:00:00-0000"),
+        freq="1000s",
+    ).tz_convert(tz=None)
 
     interpolated = (
-        this_day_of_week_data_on_single_date["n_people"]
+        rolling_df["n_people"]
         .reindex(oidx.union(nidx))
         .interpolate("linear")
         .reindex(nidx)
@@ -197,7 +225,10 @@ def linear_interpolation(this_day_of_week_data_on_single_date):
         interpolated.index.hour
         + (interpolated.index.minute / 60)
         + interpolated.index.second / 3600
+        + (interpolated.index.day - 1) * 24
     )
+
+    interpolated.dropna(inplace=True)
 
     return interpolated
 
